@@ -39,11 +39,10 @@ fun HomeScreen() {
     val vm: MainViewModel = koinViewModel()
     var data by remember { mutableStateOf<List<BookModelDto>>(emptyList()) }
 
-    val listOfData = arrayListOf<Task>()
 
     fun initViewModel() {
 
-        vm.getBooks().observeForever {
+        vm.getBooks(editText).observeForever {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
                     it.data?.let { bookList ->
@@ -63,63 +62,6 @@ fun HomeScreen() {
             }
         }
     }
-
-
-
-    listOfData.add(
-        Task(
-            "title",
-            "https://play-lh.googleusercontent.com/UjaAdTYsArv7zAJbqGWjQw2ftuOtnAlvokffC3TQQ2K12mwk0YdXUF2wZBTBA2kDZIk"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://play-lh.googleusercontent.com/UjaAdTYsArv7zAJbqGWjQw2ftuOtnAlvokffC3TQQ2K12mwk0YdXUF2wZBTBA2kDZIk"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://play-lh.googleusercontent.com/UjaAdTYsArv7zAJbqGWjQw2ftuOtnAlvokffC3TQQ2K12mwk0YdXUF2wZBTBA2kDZIk"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://play-lh.googleusercontent.com/UjaAdTYsArv7zAJbqGWjQw2ftuOtnAlvokffC3TQQ2K12mwk0YdXUF2wZBTBA2kDZIk"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-        )
-    )
-    listOfData.add(
-        Task(
-            "title",
-            "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-        )
-    )
 
     Column(
         modifier = Modifier
@@ -147,9 +89,10 @@ fun HomeScreen() {
         }
 
         if (data.isNotEmpty()) {
-            LazyColumn(modifier = Modifier.padding(16.dp)) {
+            LazyColumn() {
                 itemsIndexed(data[0].items) { _, item ->
                     BookItem(item = item)
+                    Log.e("ololo", "HomeScreen: ${data[0].items}", )
                 }
             }
         }
@@ -162,30 +105,15 @@ fun HomeScreen() {
 fun BookItem(item: BookModelDto.Item) {
     val image = item.volumeInfo.imageLinks.smallThumbnail
 
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Column() {
         GlideImage(
             model = image,
-            contentDescription = item.volumeInfo.title.toString(),
-            modifier = Modifier.size(200.dp)
+            contentDescription = item.volumeInfo.title
         )
         Text(text = item.volumeInfo.title)
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun ErrorItem(item: Task) {
-    val image = item.image
-
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        GlideImage(
-            model = image,
-            painterResource(id = R.drawable.photo).toString(),
-            modifier = Modifier.size(200.dp)
-        )
-        Text(text = item.title)
-    }
-}
 
 
 
