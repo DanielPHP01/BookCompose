@@ -3,6 +3,7 @@
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -21,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -66,7 +70,6 @@ fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White)
     ) {
         TextField(
             value = editText,
@@ -92,7 +95,7 @@ fun HomeScreen() {
             LazyColumn() {
                 itemsIndexed(data[0].items) { _, item ->
                     BookItem(item = item)
-                    Log.e("ololo", "HomeScreen: ${data[0].items}", )
+                    Log.e("ololo", "HomeScreen: ${data[0].items}")
                 }
             }
         }
@@ -103,14 +106,35 @@ fun HomeScreen() {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun BookItem(item: BookModelDto.Item) {
-    val image = item.volumeInfo.imageLinks.smallThumbnail
+    val image = item.volumeInfo.imageLinks.thumbnail.replace("http", "https")
 
-    Column() {
-        GlideImage(
-            model = image,
-            contentDescription = item.volumeInfo.title
-        )
-        Text(text = item.volumeInfo.title)
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 12.dp)
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 150.dp)
+    ) {
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 1.dp
+            ),
+        ) {
+            GlideImage(
+                model = image,
+                contentDescription = item.volumeInfo.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth(),
+            )
+            Text(
+                text = item.volumeInfo.title,
+                color = Color.Black,
+                modifier = Modifier.padding(start = 2.dp)
+            )
+        }
     }
 }
 
